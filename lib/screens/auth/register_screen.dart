@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:student_media_firebase/constants/widgets/custom_text_field.dart';
@@ -17,6 +18,8 @@ const List<String> branch = [
 
 const List<String> sem = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
+enum userType { student, faculty, Club }
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -28,9 +31,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  userType? type = userType.student;
 
   String dropdown_value = branch.first;
   String drop_down_value = sem.first;
+  final db = FirebaseFirestore.instance;
 
   @override
   void dispose() {
@@ -43,6 +48,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = FirebaseAuth.instance;
+    final db = FirebaseFirestore.instance;
+    final userId = auth.currentUser?.uid;
 
     return SafeArea(
       child: Scaffold(
@@ -88,6 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  // * BRANCH
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: DropdownButton<String>(
@@ -101,6 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           });
                         }),
                   ),
+                  // * SEM
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: DropdownButton(
@@ -123,6 +132,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(
                 height: 30,
               ),
+              Row(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: RadioListTile(
+                        title: const Text('Student'),
+                        value: userType.student,
+                        groupValue: type,
+                        onChanged: (userType? value) {
+                          setState(() {
+                            type = value;
+                          });
+                          print(type);
+                        }),
+                  ),
+                  Expanded(
+                    child: RadioListTile(
+                        title: const Text('Faculty'),
+                        value: userType.faculty,
+                        groupValue: type,
+                        onChanged: (userType? value) {
+                          setState(() {
+                            type = value;
+                          });
+                          print(type);
+                        }),
+                  ),
+                  Expanded(
+                    child: RadioListTile(
+                        title: const Text('Club'),
+                        value: userType.Club,
+                        groupValue: type,
+                        onChanged: (userType? value) {
+                          setState(() {
+                            type = value;
+                          });
+                          print(type);
+                        }),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 25,
+              ),
               ElevatedButton(
                   onPressed: () async {
                     try {
@@ -131,7 +184,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       final String pass = _password.text;
                       await auth.createUserWithEmailAndPassword(
                           email: email, password: pass);
-                      Navigator.of(context).pushNamed('/home');
+
+                      if (type == userType.faculty) {
+                        final data = {"name": name};
+                        final docRef = db
+                            .collection('Faculty')
+                            .doc(userId)
+                            .collection('userDetails');
+                        await docRef.doc().set(data);
+                        Navigator.of(context).pushNamed('/facultyHome');
+                      } else if (type == userType.Club) {
+                        final docRef = db
+                            .collection('Club')
+                            .doc(userId)
+                            .collection('userDetails');
+                        final data = {"name": name};
+                        await docRef.doc().set(data);
+                        Navigator.of(context).pushNamed('/clubHome');
+                      } else {
+                        final data = {
+                          "name": name,
+                          "branch": dropdown_value,
+                          "sem": drop_down_value,
+                        };
+                        final docRef = db
+                            .collection('Student')
+                            .doc(userId)
+                            .collection('userDetails');
+                        await docRef.doc().set(data);
+                        Navigator.of(context).pushNamed('/home');
+                      }
                     } catch (e) {
                       final snackbar = SnackBar(content: Text(e.toString()));
                       ScaffoldMessenger.of(context).showSnackBar(snackbar);

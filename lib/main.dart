@@ -1,11 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:student_media_firebase/clubs/club_home_screen.dart';
 import 'package:student_media_firebase/firebase_options.dart';
+import 'package:student_media_firebase/quiz_section/create_quiz_screen.dart';
+
 import 'package:student_media_firebase/screens/auth/login_screen.dart';
 import 'package:student_media_firebase/screens/auth/register_screen.dart';
 import 'package:student_media_firebase/screens/chat/chat_home_screen.dart';
+import 'package:student_media_firebase/screens/faculty/faculty_home_screen.dart';
 import 'package:student_media_firebase/screens/home/home_screen.dart';
 import 'package:student_media_firebase/screens/side_nav/notes/notes_home_screen.dart';
+import 'package:student_media_firebase/screens/side_nav/pomodo_screen.dart';
+
 import 'package:student_media_firebase/screens/todo/create_task_screen.dart';
 
 void main() async {
@@ -25,14 +31,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
-      home: const RegisterScreen(),
+      home: const HomeScreen(),
       routes: {
         '/home': (context) => const HomeScreen(),
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/chat': (context) => const ChatHomeScreen(),
-        '/notes': (context) => const NotesHomeScreen(),
-        '/tasks':(context) => const CreateTaskScreen(),
+        '/pomodoro': (context) => const PomodoroScreen(),
+        '/tasks': (context) => const CreateTaskScreen(),
+        '/facultyHome': (context) => const FacultyHomeScreen(),
+        '/clubHome': (context) => const ClubHomeScreen(),
+        '/notesHome': (context) => const NotesHomeScreen(),
       },
     );
   }

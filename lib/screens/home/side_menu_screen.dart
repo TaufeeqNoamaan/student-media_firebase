@@ -18,26 +18,11 @@ class SideMenuScreen extends StatelessWidget {
               Icons.timer,
               color: Colors.white,
             ),
-            title: Text(
+            title: const Text(
               'Pomodoro View',
             ),
-            onTap: () {},
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          ListTile(
-            enableFeedback: true,
-            minLeadingWidth: 20,
-            leading: const Icon(
-              Icons.monochrome_photos,
-              color: Colors.white,
-            ),
-            title: Text(
-              'Notes',
-            ),
             onTap: () {
-              Navigator.of(context).pushNamed('/notes');
+              Navigator.of(context).pushNamed('/pomodoro');
             },
           ),
           const SizedBox(
@@ -50,7 +35,7 @@ class SideMenuScreen extends StatelessWidget {
               Icons.menu_book,
               color: Colors.white,
             ),
-            title: Text(
+            title: const Text(
               'Projects View',
             ),
             onTap: () {},
@@ -65,7 +50,7 @@ class SideMenuScreen extends StatelessWidget {
               Icons.timer,
               color: Colors.white,
             ),
-            title: Text(
+            title: const Text(
               'Pomodoro View',
             ),
             onTap: () {},
@@ -80,7 +65,7 @@ class SideMenuScreen extends StatelessWidget {
               Icons.account_circle,
               color: Colors.white,
             ),
-            title: Text(
+            title: const Text(
               'My Profile',
             ),
             onTap: () {},
@@ -96,7 +81,7 @@ class SideMenuScreen extends StatelessWidget {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pushNamed('/login');
               },
-              child: const Text(
+              child:  const Text(
                 'Sign out',
                 style: TextStyle(
                     color: Colors.deepPurpleAccent,

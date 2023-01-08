@@ -54,5 +54,3 @@ class TodoHomePage extends StatelessWidget {
             })));
   }
 }
-
-

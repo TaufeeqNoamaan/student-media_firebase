@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:student_media_firebase/screens/side_nav/notes/notes_card.dart';
 
 class NotesHomeScreen extends StatefulWidget {
   const NotesHomeScreen({super.key});
@@ -10,24 +9,26 @@ class NotesHomeScreen extends StatefulWidget {
 }
 
 class _NotesHomeScreenState extends State<NotesHomeScreen> {
-  final db = FirebaseFirestore.instance;
+  final storageRef = FirebaseStorage.instance;
 
   @override
   Widget build(BuildContext context) {
-    final docRef = db.collection("Student");
-    return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pop();
+    final gsRef = storageRef.refFromURL(
+        'https://firebasestorage.googleapis.com/v0/b/student-media-taufeeq.appspot.com/o/Student%20Media%20proposal.pdf?alt=media&token=bdee0d1e-b949-4c16-ad4d-2994f683c083');
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Notes Home Screen'),
+      ),
+      body: Column(
+        children: [
+          ElevatedButton(
+              onPressed: () async {
+                await gsRef.getData();
               },
-            ),
-          ),
-          body: const Center(
-            child: Text('Notes Screen'),
-          )),
+              child: const Text('Download'))
+        ],
+      ),
     );
   }
 }
